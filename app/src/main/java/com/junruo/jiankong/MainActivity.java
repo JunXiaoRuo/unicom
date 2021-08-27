@@ -141,55 +141,37 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         //检查更新
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    upupup();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            }
-        }).start();
+        upupup();
 
 
-        try {
-            // 创建SharedPreferences对象用于获取Cookie信息,并将其私有化
-            SharedPreferences share = getSharedPreferences("Cookie",
-                    Context.MODE_PRIVATE);
-            // 获取编辑器来存储数据到sharedpreferences中
-            cookie = share.getString("Cookie","");
-            time = share.getString("time","");
-            gao = share.getString("gao","320");
-            xgao = share.getString("xgao","150");
-            xkuan = share.getString("xkuan","200");
-            kuan = share.getString("kuan","230");
+
+        // 创建SharedPreferences对象用于获取Cookie信息,并将其私有化
+        SharedPreferences share = getSharedPreferences("Cookie",
+                Context.MODE_PRIVATE);
+        // 获取编辑器来存储数据到sha redpreferences中
+        cookie = share.getString("Cookie","");
+        time = share.getString("time","");
+        gao = share.getString("gao","320");
+        xgao = share.getString("xgao","150");
+        xkuan = share.getString("xkuan","200");
+        kuan = share.getString("kuan","230");
 
 
-            if (time.equals("")){
+        if (time.equals("")){
 
-            }else {
-                binding.shuaxin.setText(time);
-            }
-
-            binding.cookie.setText(cookie);
-
-            binding.kuan.setText(kuan);
-            binding.gao.setText(gao);
-            binding.xkuan.setText(xkuan);
-            binding.xgao.setText(xgao);
-        }catch (Exception e){
-            e.printStackTrace();
+        }else {
+            binding.shuaxin.setText(time);
         }
 
+        binding.cookie.setText(cookie);
 
-        try {
-            //点击事件
-            OnClick();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        binding.kuan.setText(kuan);
+        binding.gao.setText(gao);
+        binding.xkuan.setText(xkuan);
+        binding.xgao.setText(xgao);
+
+
+        OnClick();
 
 
     }
