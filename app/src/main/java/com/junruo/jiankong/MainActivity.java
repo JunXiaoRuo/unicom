@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
                 toast("请填写cookie后再开启悬浮窗！");
             }else {
                 if (FloatingImageDisplayService.isStarted) {
-                    binding.xfc.setText("显示悬浮窗");
+                    binding.xfc.setText("关闭悬浮窗");
                     return;
                 }
                 if (!Settings.canDrawOverlays(this)) {
@@ -302,10 +302,12 @@ public class MainActivity extends AppCompatActivity {
                         editor.putString("xgao",binding.xgao.getText().toString());
                         editor.putString("xkuan",binding.xkuan.getText().toString());
                         editor.commit();
+                        binding.xfc.setText("关闭悬浮窗");
+
                         Intent intent = new Intent(MainActivity.this, FloatingImageDisplayService.class);
                         startService(intent);
 
-                        binding.xfc.setText("关闭悬浮窗");
+
                     }
                 }
             }
