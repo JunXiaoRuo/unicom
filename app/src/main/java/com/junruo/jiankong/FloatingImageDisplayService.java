@@ -71,10 +71,6 @@ public class FloatingImageDisplayService extends Service {
 
     private String gao,kuan,xgao,xkuan;
 
-
-    //1，首先创建一个Handler对象
-    Handler handler=new Handler();
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCreate() {
@@ -92,10 +88,6 @@ public class FloatingImageDisplayService extends Service {
 
         time = Long.valueOf(share.getString("time",""))*1000;
         System.out.println("==========>高"+gao+"==========>宽"+kuan+"==========>小高"+xgao+"==========>小宽"+xkuan);
-
-
-
-
 
         isStarted = true;
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -163,7 +155,8 @@ public class FloatingImageDisplayService extends Service {
 
     }
 
-
+    //1，首先创建一个Handler对象
+    Handler handler=new Handler();
     @SuppressLint("WrongConstant")
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void showFloatingWindow() {
