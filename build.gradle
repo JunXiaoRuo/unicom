@@ -6,6 +6,9 @@ buildscript {
         maven { url 'https://repo1.maven.org/maven2/' }
         maven { url 'https://maven.aliyun.com/repository/google/' }
         maven { url 'https://maven.aliyun.com/repository/jcenter/' }
+        maven {
+            url 'https://dl.bintray.com/spark/maven'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.2'
@@ -22,6 +25,9 @@ allprojects {
         maven { url 'https://repo1.maven.org/maven2/' }
         maven { url 'https://maven.aliyun.com/repository/google/' }
         maven { url 'https://maven.aliyun.com/repository/jcenter/' }
+        maven {
+            url 'https://dl.bintray.com/spark/maven'
+        }
     }
 }
 

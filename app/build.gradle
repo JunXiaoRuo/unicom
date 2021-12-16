@@ -10,8 +10,8 @@ android {
         applicationId "com.junruo.jiankong"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 5
-        versionName '1.5'
+        versionCode 8
+        versionName '1.9'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -27,8 +27,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    viewBinding {
+   /* viewBinding {
         enabled = true
+    }*/
+    buildFeatures{
+        dataBinding = true
+        // for view binding :
+         viewBinding = true
     }
 }
 
@@ -44,9 +49,11 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.73'
 
 
+
     implementation 'com.squareup.okhttp3:okhttp:3.9.0'
     // okhttp3 网络请求模块
     implementation 'com.lzy.net:okhttputils:1.8.1'
+    implementation 'com.github.medyo:fancybuttons:1.9.1'
 
 
 }

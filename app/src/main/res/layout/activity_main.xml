@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical">
+
+
     <!--标题-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,473 +30,677 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/banben"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="V1.0"
-                android:textColor="#000"
-                android:textSize="18sp"
-                android:layout_gravity="center" />
-        </LinearLayout>
-
-    </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#7A7A7A" />
-
-    <ScrollView
-        android:id="@+id/svFu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/noticecv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:clickable="false"
+            card_view:cardBackgroundColor="#FFF"
+            card_view:cardCornerRadius="5dp"
+            card_view:cardElevation="2dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="你的套餐："
-                    android:textSize="15dp"
-                    />
-                <TextView
-                    android:id="@+id/packageName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="登录后查看"
-                    android:textSize="15dp"
-                    />
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/notice" />
+                <com.junruo.jiankong.MarqueeTextView
+                    android:id="@+id/notice"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="如果这里没有显示，请检查你的网络连接,或加群请求帮助。QQ群：729376299"/>
             </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="#1000" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp">
-                <LinearLayout
+                android:gravity="center">
+
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:layout_gravity="center"
+                    android:id="@+id/usehelp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="10dp"
+                    fancy:fb_borderColor="#FFFFFF"
+                    fancy:fb_borderWidth="1dp"
+                    fancy:fb_defaultColor="#66A1A8"
+                    fancy:fb_focusColor="#68D7E4"
+                    fancy:fb_radius="20dp"
+                    fancy:fb_text="使用帮助"
+                    fancy:fb_textColor="#FFFFFF" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/zhichi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="10dp"
+                    fancy:fb_borderColor="#FFFFFF"
+                    fancy:fb_borderWidth="1dp"
+                    fancy:fb_defaultColor="#D69D4A"
+                    fancy:fb_focusColor="#ED9C27"
+                    fancy:fb_radius="20dp"
+                    fancy:fb_text="支持作者"
+                    fancy:fb_textColor="#FFFFFF" />
 
+            </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="免流总和："
-                            android:textSize="15dp"
-                             />
-                        <TextView
-                            android:id="@+id/mian"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="登录后查看"
-                            android:textSize="15dp"
-                             />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="通用总量："
-                            android:textSize="15dp"
-                             />
-                        <TextView
-                            android:id="@+id/zong"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="登录后查看"
-                            android:textSize="15dp"
-                             />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="通用已用："
-                            android:textSize="15dp"
-                             />
-                        <TextView
-                            android:id="@+id/yong"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="登录后查看"
-                            android:textSize="15dp"
-                             />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="剩余流量："
-                            android:textSize="15dp"
-                             />
-                        <TextView
-                            android:id="@+id/sheng"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="登录后查看"
-                            android:textSize="15dp"
-                             />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="本次免流："
-                            android:textSize="15dp"
-                             />
-                        <TextView
-                            android:id="@+id/ben"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="登录后查看"
-                            android:textSize="15dp"
-                             />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="本次消耗："
-                            android:textSize="15dp"
-                             />
-                        <TextView
-                            android:id="@+id/tiao"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="登录后查看"
-                            android:textSize="15dp"
-                             />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="更新时间："
-                            android:textSize="15dp"
-                             />
-                        <TextView
-                            android:id="@+id/sj"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="登录后查看"
-                            android:textSize="15dp"
-                             />
-                    </LinearLayout>
-
-                </LinearLayout>
+            <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="15dp"
+                android:clickable="false"
+                card_view:cardBackgroundColor="#FFF"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="10dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginLeft="10dp">
-
-
+                    android:padding="5dp"
+                    android:background="#513F3D">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_gravity="center">
 
 
                         <TextView
+                            android:textColor="#C58B58"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="定向总量："
-                            android:textSize="15dp"
-                            />
+                            android:text="你的套餐："
+                            android:textSize="15dp" />
                         <TextView
-                            android:id="@+id/dingz"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="登录后查看"
-                            android:textSize="15dp"
-                            />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="定向已用："
-                            android:textSize="15dp"
-                            />
-                        <TextView
-                            android:id="@+id/dingy"
+                            android:textColor="#C58B58"
+                            android:id="@+id/packageName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="登录后查看"
-                            android:textSize="15dp"
-                            />
+                            android:textSize="15dp" />
                     </LinearLayout>
+
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_horizontal">
 
-
-                        <TextView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="剩余流量："
-                            android:textSize="15dp"
-                            />
-                        <TextView
-                            android:id="@+id/dings"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="总免："
+                                    android:textSize="15dp" />
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:id="@+id/mian"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="登录后查看"
+                                    android:textSize="15dp" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="通总："
+                                    android:textSize="15dp" />
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:id="@+id/zong"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="登录后查看"
+                                    android:textSize="15dp" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="已用："
+                                    android:textSize="15dp" />
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:id="@+id/yong"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="登录后查看"
+                                    android:textSize="15dp" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="剩余："
+                                    android:textSize="15dp" />
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:id="@+id/sheng"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="登录后查看"
+                                    android:textSize="15dp" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="本免："
+                                    android:textSize="15dp" />
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:id="@+id/ben"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="登录后查看"
+                                    android:textSize="15dp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="本耗："
+                                    android:textSize="15dp" />
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:id="@+id/tiao"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="登录后查看"
+                                    android:textSize="15dp" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="更新："
+                                    android:textSize="15dp" />
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:id="@+id/sj"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="登录后查看"
+                                    android:textSize="15dp" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="登录后查看"
-                            android:textSize="15dp"
-                            />
+                            android:orientation="vertical"
+                            android:layout_marginLeft="20dp">
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="定总："
+                                    android:textSize="15dp"/>
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:id="@+id/dingz"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="登录后查看"
+                                    android:textSize="15dp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="定用："
+                                    android:textSize="15dp"/>
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:id="@+id/dingy"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="登录后查看"
+                                    android:textSize="15dp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="定剩："
+                                    android:textSize="15dp" />
+                                <TextView
+                                    android:textColor="#C58B58"
+                                    android:id="@+id/dings"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="登录后查看"
+                                    android:textSize="15dp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
                     </LinearLayout>
-
-
-
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-        </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="输入cookie："/>
-                <EditText
-                    android:id="@+id/cookie"
-                    android:hint="在此输入cookie"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center">
-                <Button
-                    android:id="@+id/stop"
-                    android:text="登录/刷新"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <Button
-                    android:layout_marginLeft="20dp"
-                    android:id="@+id/join"
-                    android:text="加群"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#7A7A7A"/>
-            <ScrollView
-                android:id="@+id/svZi"
-                android:layout_width="match_parent"
-                android:layout_height="95dp">
-                <TextView
-                    android:textIsSelectable="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="注意事项(请向上滑动查看完整)：\nQQ群:729376299\n1、闪退是cookie问题或者联通维护，请自行检查cookie或打开手厅余量查询。\n2、可以直接输入cookie后打开悬浮窗。\n3、间隔时间不要低于60秒，建议180秒，太快的刷新速度会导致联通屏蔽最新数据，久久不能更新。\n4、为了避免频繁刷新，主页面需要手动刷新，悬浮窗实行定时自动刷新"/>
-            </ScrollView>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#7A7A7A"/>
-            <TextView
+            <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="悬浮窗设置："/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="宽:"
-                    android:textSize="15sp"/>
-                <EditText
-                    android:id="@+id/kuan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="默认：230"/>
-
-                <TextView
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="高:"
-                    android:textSize="15sp"/>
-                <EditText
-                    android:id="@+id/gao"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="默认：320"/>
-                <TextView
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="←展开的悬浮窗"
-                    android:textSize="10sp"/>
-              <!--  <TextView
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="字大:"
-                    android:textSize="15sp"/>
-                <EditText
-                    android:id="@+id/zi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="默认：9"/>-->
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="宽:"
-                    android:textSize="15sp"/>
-                <EditText
-                    android:id="@+id/xkuan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="默认：200"/>
-
-                <TextView
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="高:"
-                    android:textSize="15sp"/>
-                <EditText
-                    android:id="@+id/xgao"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="默认：150"/>
-                <TextView
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="←折叠后的"
-                    android:textSize="10sp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="刷新间隔(秒)："
-                    android:textSize="15sp"/>
-                <EditText
-                    android:id="@+id/shuaxin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="建议：180秒"/>
-                <Button
-                    android:id="@+id/xfc"
-                    android:text="显示悬浮窗"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="startFloatingButtonService"/>
-
-            </LinearLayout>
-            <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#7A7A7A"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="15dp"
+                android:clickable="false"
+                card_view:cardBackgroundColor="#FFF"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#6D6C72"
+                    android:padding="10dp">
 
-            <ScrollView
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="输入Cookie"
+                                    android:textColor="#000"
+                                    android:textSize="17sp" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/clear"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="清"
+                                android:textColor="#FFF"/>
+
+                            <TextView
+                                android:id="@+id/paste"
+                                android:layout_marginLeft="20dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="贴"
+                                android:textColor="#FFF"/>
+
+                        </LinearLayout>
+                        <View
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:background="#C2B99D" />
+
+                        <EditText
+                            android:id="@+id/cookie"
+                            android:hint="在此输入cookie"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center">
+
+                        <mehdi.sakout.fancybuttons.FancyButton
+                            android:id="@+id/stop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:paddingTop="10dp"
+                            fancy:fb_borderColor="#FFFFFF"
+                            fancy:fb_borderWidth="1dp"
+                            fancy:fb_defaultColor="#A2987C"
+                            fancy:fb_focusColor="#CFB879"
+                            fancy:fb_radius="20dp"
+                            fancy:fb_text="登录"
+                            fancy:fb_textColor="#FFFFFF" />
+
+
+                        <mehdi.sakout.fancybuttons.FancyButton
+                            android:layout_marginLeft="10dp"
+                            android:id="@+id/join"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:paddingTop="10dp"
+                            fancy:fb_borderColor="#FFFFFF"
+                            fancy:fb_borderWidth="1dp"
+                            fancy:fb_defaultColor="#A2987C"
+                            fancy:fb_focusColor="#CFB879"
+                            fancy:fb_radius="20dp"
+                            fancy:fb_text="加群"
+                            fancy:fb_textColor="#FFFFFF" />
+
+                        <mehdi.sakout.fancybuttons.FancyButton
+                            android:id="@+id/get"
+                            android:layout_marginLeft="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:paddingTop="10dp"
+                            fancy:fb_borderColor="#FFFFFF"
+                            fancy:fb_borderWidth="1dp"
+                            fancy:fb_defaultColor="#A2987C"
+                            fancy:fb_focusColor="#CFB879"
+                            fancy:fb_radius="20dp"
+                            fancy:fb_text="获取cookie"
+                            fancy:fb_textColor="#FFFFFF" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="15dp"
+                android:clickable="false"
+                card_view:cardBackgroundColor="#FFF"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="10dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="#819187"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="悬浮窗设置"
+                        android:textColor="#000"
+                        android:textSize="17dp"
+                        android:layout_gravity="center_vertical"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#E1DCD3" />
+                    <TextView
+                        android:textColor="#E1DCD3"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="展开的悬浮窗"
+                        android:textSize="15sp"
+                        android:layout_gravity="center_horizontal"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="宽:"
+                            android:textColor="#E1DCD3"
+                            android:textSize="16sp"/>
+                        <EditText
+                            android:id="@+id/kuan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="默认：230"
+                            android:gravity="center"/>
 
+                        <TextView
+                            android:textColor="#E1DCD3"
+                            android:layout_marginLeft="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="高:"
+                            android:textSize="16sp"/>
+                        <EditText
+                            android:gravity="center"
+                            android:id="@+id/gao"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="默认：320"/>
+
+                        <!--  <TextView
+                              android:layout_marginLeft="10dp"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="字大:"
+                              android:textSize="15sp"/>
+                          <EditText
+                              android:id="@+id/zi"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:hint="默认：9"/>-->
+                    </LinearLayout>
+                    <TextView
+                        android:textColor="#E1DCD3"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="折叠后的悬浮窗"
+                        android:textSize="15sp"
+                        android:layout_gravity="center_horizontal"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:textColor="#E1DCD3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="宽:"
+                            android:textSize="16sp"/>
+                        <EditText
+                            android:gravity="center"
+                            android:id="@+id/xkuan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="默认：200"/>
+
+                        <TextView
+                            android:textColor="#E1DCD3"
+                            android:layout_marginLeft="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="高:"
+                            android:textSize="16sp"/>
+                        <EditText
+                            android:gravity="center"
+                            android:id="@+id/xgao"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="默认：150"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+
+                        <TextView
+                            android:textColor="#E1DCD3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="刷新间隔(秒)："
+                            android:textSize="17sp"/>
+                        <EditText
+                            android:gravity="center"
+                            android:id="@+id/shuaxin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="建议：180秒"/>
+
+
+
+                        <mehdi.sakout.fancybuttons.FancyButton
+                            android:id="@+id/xfc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:paddingTop="10dp"
+                            fancy:fb_borderColor="#322F2F"
+                            fancy:fb_borderWidth="1dp"
+                            fancy:fb_defaultColor="#E1DCD3"
+                            fancy:fb_focusColor="#959390"
+                            fancy:fb_radius="20dp"
+                            fancy:fb_text="显示悬浮窗"
+                            fancy:fb_textColor="#322F2F"
+                            android:onClick="startFloatingButtonService"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="15dp"
+                android:clickable="false"
+                card_view:cardBackgroundColor="#FFF"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#1F243D"
+                    android:padding="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="打印流量包："
+                        android:textColor="#A1842C"
                         android:textSize="15dp"
                          />
                     <TextView
@@ -502,12 +709,11 @@
                         android:layout_height="wrap_content"
                         android:text="登录后查看"
                         android:textSize="15dp"
-                        android:textColor="@color/black"
+                        android:textColor="#C39B1F"
                         android:textIsSelectable="true" />
                 </LinearLayout>
-            </ScrollView>
+            </androidx.cardview.widget.CardView>
+
         </LinearLayout>
-
     </ScrollView>
-
 </LinearLayout>

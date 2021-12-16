@@ -7,16 +7,20 @@ import androidx.core.app.ActivityCompat;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -25,12 +29,14 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.junruo.jiankong.databinding.ActivityMainBinding;
+import com.junruo.jiankong.server.FloatingImageDisplayService;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import okhttp3.Call;
@@ -65,9 +71,10 @@ public class MainActivity extends AppCompatActivity {
     private int versioncode;
     private String oldVersion ;
 
-    private String NewVersion,versionmsg;
+    private String NewVersion,versionmsg,getcookie,gonggao,notice;
 
     private String gao,kuan,xgao,xkuan;
+
     //定义读写权限
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
@@ -75,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
             "android.permission.READ_EXTERNAL_STORAGE",
             "android.permission.WRITE_EXTERNAL_STORAGE" };
 
+    //动态菜单
+    private ShortcutManager shortcutManager;
+
+    public static Context context;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -88,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
 
         //获取当前版本
         oldVersion = getAppVersionName(this);
-        binding.banben.setText("V"+oldVersion);
 
         //初始化
         initView();
@@ -138,12 +148,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    //初始化
     private void initView() {
+
+        Intent intent = new Intent(this, toumingActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+        //动态菜单
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            shortcutManager = getSystemService(ShortcutManager.class);
+            ShortcutInfo shortcut = new ShortcutInfo.Builder(this, "id1")
+                    .setShortLabel("监控")
+                    .setLongLabel("监控")
+                    .setIcon(Icon.createWithResource(this, R.mipmap.ic_launcher))
+                    .setIntent(intent)
+                    .build();
+/* ShortcutInfo shortcut2 = new ShortcutInfo.Builder(this, "id2")
+                .setShortLabel("Web site")
+                .setLongLabel("第二个")
+                .setIcon(Icon.createWithResource(this, R.drawable.link))
+                .setIntent(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://www.csdn.com/")))
+                .build();*/
+
+
+            shortcutManager.setDynamicShortcuts(Arrays.asList(shortcut));
+        }
+
         //检查更新
         upupup();
-
-
 
         // 创建SharedPreferences对象用于获取Cookie信息,并将其私有化
         SharedPreferences share = getSharedPreferences("Cookie",
@@ -210,7 +242,122 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        binding.get.setOnClickListener(v -> {
+            Intent intent2 = new Intent(this,GetCookieActivity.class);
+            AlertDialog alertDialog2 = new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("警告")
+                    .setMessage("本功能为第三方支持，本软件不会保存此功能获取的所有返回信息，并在退出第三方获取cookie时，清除所有页面缓存信息，有更好的工具可以找我进行添加，介意者请自行通过抓包的方式获取cookie！")
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setPositiveButton("我已知晓", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(intent2);
+                        }
+                    })
+
+                    .setNegativeButton("不同意", new DialogInterface.OnClickListener() {//添加取消
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .create();
+            alertDialog2.show();
+
+        });
+
+
+        binding.clear.setOnClickListener(v -> {
+            binding.cookie.setText("");
+            toast("已清除");
+        });
+
+        binding.paste.setOnClickListener(v -> {
+            String clipboardContent = getClipboardContent(this);
+            binding.cookie.setText(clipboardContent);
+            toast("已粘贴");
+
+        });
+
+        binding.usehelp.setOnClickListener(v -> {
+
+            AlertDialog alertDialog2 = new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("使用帮助")
+                    .setMessage(gonggao)
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+
+                    .create();
+            alertDialog2.show();
+
+        });
+
+        binding.noticecv.setOnClickListener(v -> {
+            AlertDialog alertDialog2 = new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("公告")
+                    .setMessage(notice)
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+
+                    .create();
+            alertDialog2.show();
+        });
+
+        binding.zhichi.setOnClickListener(v -> {
+            Intent intent =new Intent(this, payActivity.class);
+
+            AlertDialog alertDialog2 = new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("赞助")
+                    .setMessage("每一次赞助都承载的希望，如果您觉得本软件还不错的话，您可以随意赞助。当然，也不会因为没有人赞助而添加会员机制。\n因为本软件永久免费。")
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setPositiveButton("赞助", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(intent);
+                            toast("感谢您对本软件的支持！");
+                        }
+                    })
+                    .setNegativeButton("算了", new DialogInterface.OnClickListener() {//添加"no"按钮
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            toast("嘤嘤嘤");
+                        }
+                    })
+
+                    .create();
+            alertDialog2.show();
+
+        });
+
     }
+
+    //获取剪贴板内容
+    public static String getClipboardContent(Context context) {
+        ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        if (cm != null) {
+            ClipData data = cm.getPrimaryClip();
+            if (data != null && data.getItemCount() > 0) {
+                ClipData.Item item = data.getItemAt(0);
+                if (item != null) {
+                    CharSequence sequence = item.coerceToText(context);
+                    if (sequence != null) {
+                        return sequence.toString();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
 
     //版本更新检查
     private void upupup() {
@@ -226,6 +373,26 @@ public class MainActivity extends AppCompatActivity {
 
                             NewVersion = json.getString("version");
                             versionmsg = json.getString("msg");
+                            getcookie = json.getString("getcookie");
+                            gonggao = json.getString("gonggao");
+                            notice = json.getString("notice");
+
+                            binding.notice.setText(notice);
+
+
+                            if (gonggao==null||gonggao.equals("")){
+                                gonggao = "很抱歉，你可能需要更新最新版才能看见最新的使用帮助，或者检查你的网络连接。请加群获取最新软件。QQ群：729376299";
+                            }
+
+
+                            // 创建SharedPreferences对象用于存储公告信息,并将其私有化
+                            SharedPreferences share = getSharedPreferences("gonggao",
+                                    Context.MODE_PRIVATE);
+                            // 获取编辑器来存储数据到sharedpreferences中
+                            SharedPreferences.Editor editor = share.edit();
+                            editor.putString("gonggao",gonggao);
+                            editor.putString("getcookie",getcookie);
+                            editor.commit();
 
                             if (!oldVersion.equals(NewVersion)) {
                                 AlertDialog alertDialog2 = new AlertDialog.Builder(MainActivity.this)
@@ -357,198 +524,206 @@ public class MainActivity extends AppCompatActivity {
         //格式化double值
         DecimalFormat df = new DecimalFormat("0.000");
         Date day=new Date();
-        SimpleDateFormat sj = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sj = new SimpleDateFormat("HH:mm:ss");
         binding.sj.setText(sj.format(day));
 
         try {
-        OkHttpUtils.post("https://m.client.10010.com/mobileservicequery/operationservice/queryOcsPackageFlowLeftContent")
-                .headers("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
-                .headers("Cookie", cookie)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        Toast.makeText(MainActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();
-                    }
-
-                    @SuppressLint("LongLogTag")
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        toast("正在解析");
-                        System.out.println(s);
-                        if (s.equals("999999")||s.equals("")||s == null){
-                            toast("失败，请重新获取cookie");
-                            return;
+            OkHttpUtils.post("https://m.client.10010.com/mobileservicequery/operationservice/queryOcsPackageFlowLeftContent")
+                    .headers("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
+                    .headers("Cookie", cookie)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Response response, Exception e) {
+                            super.onError(call, response, e);
+                            Toast.makeText(MainActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();
                         }
-                        JSONObject json = JSONObject.parseObject(s);
 
-                        binding.packageName.setText(json.get("packageName").toString());
+                        @SuppressLint("LongLogTag")
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            toast("正在解析");
+                            System.out.println(s);
+                            if (s.equals("999999")||s.equals("")||s == null){
+                                toast("失败，请重新获取cookie");
+                                return;
+                            }
+                            JSONObject json = JSONObject.parseObject(s);
+
+                            binding.packageName.setText(json.get("packageName").toString());
 
 
-                        JSONArray jsonArray = json.getJSONArray("resources");
-
-                        JSONObject job = jsonArray.getJSONObject(0);
-
-                        JSONArray details = job.getJSONArray("details");
+                            JSONObject summary = json.getJSONObject("summary");
 
 
-                        for (int i = 0; i < details.size(); i++) {
-                            JSONObject liuliang = details.getJSONObject(i);
-                            if (liuliang.getString("limited").equals("0")) {//套内流量包
-                                if (liuliang.getString("addupItemCode") != null){
+                            mianliu = Double.parseDouble(summary.getString("freeFlow"));//总免
+                            yong = Double.parseDouble(summary.getString("sum")) - mianliu;//本月已用
 
-                                    if (!liuliang.getString("addupItemCode").equals("40008")){//通用流量包
+
+                            JSONArray jsonArray = json.getJSONArray("resources");
+
+                            JSONObject job = jsonArray.getJSONObject(0);
+
+                            JSONArray details = job.getJSONArray("details");
+
+
+                            for (int i = 0; i < details.size(); i++) {
+                                JSONObject liuliang = details.getJSONObject(i);
+                                if (liuliang.getString("limited").equals("0")) {//套内流量包
+                                    if (liuliang.getString("addupItemCode") != null){
+
+                                        if (!liuliang.getString("addupItemCode").equals("40008")){//通用流量包
+                                            String feePolicyName = liuliang.getString("feePolicyName");//流量包名称
+                                            String total = liuliang.getString("total");//流量包总量
+                                            String use = liuliang.getString("use");//流量包使用
+                                            String remain = liuliang.getString("remain");//流量包剩余
+
+                                            zong = zong + Double.parseDouble(total);
+                                            //yong = yong + Double.parseDouble(use);
+                                            sheng = sheng + Double.parseDouble(remain);
+
+                                            dayin = dayin + "\n通用包名称：" + feePolicyName + "总量：" + total + "M，已使用：" + use + "M，剩余" + remain + "M\n";
+                                        }else {//定向流量包
+                                            String feePolicyName = liuliang.getString("feePolicyName");//流量包名称
+                                            String total = liuliang.getString("total");//流量包总量
+                                            String use = liuliang.getString("use");//流量包使用
+                                            String remain = liuliang.getString("remain");//流量包剩余
+
+                                            dingz = dingz + Double.parseDouble(total);
+                                            dingy = dingy + Double.parseDouble(use);
+                                            dings = dings + Double.parseDouble(remain);
+
+
+                                            //mianliu = mianliu + Double.parseDouble(use);
+
+                                            dayin = dayin + "\n定向包名称：" + feePolicyName + "总量：" + total + "M，已使用：" + use + "M，剩余" + remain + "M\n";
+                                        }
+
+                                    }else {
+
                                         String feePolicyName = liuliang.getString("feePolicyName");//流量包名称
                                         String total = liuliang.getString("total");//流量包总量
                                         String use = liuliang.getString("use");//流量包使用
                                         String remain = liuliang.getString("remain");//流量包剩余
 
                                         zong = zong + Double.parseDouble(total);
-                                        yong = yong + Double.parseDouble(use);
+                                        //yong = yong + Double.parseDouble(use);
                                         sheng = sheng + Double.parseDouble(remain);
 
                                         dayin = dayin + "\n通用包名称：" + feePolicyName + "总量：" + total + "M，已使用：" + use + "M，剩余" + remain + "M\n";
-                                    }else {//定向流量包
-                                        String feePolicyName = liuliang.getString("feePolicyName");//流量包名称
-                                        String total = liuliang.getString("total");//流量包总量
-                                        String use = liuliang.getString("use");//流量包使用
-                                        String remain = liuliang.getString("remain");//流量包剩余
 
-                                        dingz = dingz + Double.parseDouble(total);
-                                        dingy = dingy + Double.parseDouble(use);
-                                        dings = dings + Double.parseDouble(remain);
-
-
-                                        mianliu = mianliu + Double.parseDouble(use);
-
-                                        dayin = dayin + "\n定向包名称：" + feePolicyName + "总量：" + total + "M，已使用：" + use + "M，剩余" + remain + "M\n";
                                     }
 
-                                }else {
+                                }else if (liuliang.getString("addUpItemName")==null||liuliang.getString("addupItemCode").equals("40008")){
+                                    String feePolicyName = liuliang.getString("feePolicyName");//免流包名称
+                                    String use = liuliang.getString("use");//已免流
 
-                                    String feePolicyName = liuliang.getString("feePolicyName");//流量包名称
-                                    String total = liuliang.getString("total");//流量包总量
-                                    String use = liuliang.getString("use");//流量包使用
-                                    String remain = liuliang.getString("remain");//流量包剩余
 
-                                    zong = zong + Double.parseDouble(total);
-                                    yong = yong + Double.parseDouble(use);
-                                    sheng = sheng + Double.parseDouble(remain);
-
-                                    dayin = dayin + "\n通用包名称：" + feePolicyName + "总量：" + total + "M，已使用：" + use + "M，剩余" + remain + "M\n";
-
+                                    //mianliu = mianliu + Double.parseDouble(use);
+                                    dayin = dayin + "\n免流包名称：" + feePolicyName +"已使用：" + use + "M\n";
                                 }
 
-                            }else if (liuliang.getString("addUpItemName")==null||liuliang.getString("addupItemCode").equals("40008")){
-                                String feePolicyName = liuliang.getString("feePolicyName");//免流包名称
-                                String use = liuliang.getString("use");//已免流
-
-
-                                mianliu = mianliu + Double.parseDouble(use);
-                                dayin = dayin + "\n免流包名称：" + feePolicyName +"已使用：" + use + "M\n";
                             }
 
-                        }
+                            if (orone.equals("yes")){
+                                onet = yong;
+                                onem = mianliu;
+                                orone="no";
+                                // 创建SharedPreferences对象用于存储Cookie信息,并将其私有化
+                                SharedPreferences share = getSharedPreferences("Cookie",
+                                        Context.MODE_PRIVATE);
+                                // 获取编辑器来存储数据到sharedpreferences中
+                                SharedPreferences.Editor editor = share.edit();
+                                editor.putString("Cookie",cookie);
+                                editor.commit();
+                            }else {
+                                //toast("不是第一次");
+                            }
 
-                        if (orone.equals("yes")){
-                            onet = yong;
-                            onem = mianliu;
-                            orone="no";
-                            // 创建SharedPreferences对象用于存储Cookie信息,并将其私有化
-                            SharedPreferences share = getSharedPreferences("Cookie",
-                                    Context.MODE_PRIVATE);
-                            // 获取编辑器来存储数据到sharedpreferences中
-                            SharedPreferences.Editor editor = share.edit();
-                            editor.putString("Cookie",cookie);
-                            editor.commit();
-                        }else {
-                            //toast("不是第一次");
-                        }
+                            ben = mianliu - onem;//本次免流
+                            if (ben >= 1024.00){//流量大于1024m将使用G来表示
+                                ben = ben / 1024.00;
 
-                        ben = mianliu - onem;//本次免流
-                        if (ben >= 1024.00){//流量大于1024m将使用G来表示
-                            ben = ben / 1024.00;
+                                binding.ben.setText(df.format(ben)+"G");
+                            }else {
+                                binding.ben.setText(df.format(ben)+"M");
+                            }
 
-                            binding.ben.setText(df.format(ben)+"G");
-                        }else {
-                            binding.ben.setText(df.format(ben)+"M");
-                        }
+                            tiao = yong - onet;//本次消耗
+                            if (tiao >= 1024.00){//流量大于1024m将使用G来表示
+                                tiao = tiao / 1024.00;
 
-                        tiao = yong - onet;//本次消耗
-                        if (tiao >= 1024.00){//流量大于1024m将使用G来表示
-                            tiao = tiao / 1024.00;
-
-                            binding.tiao.setText(df.format(tiao)+"G");
-                        }else {
-                            binding.tiao.setText(df.format(tiao)+"M");
-                        }
+                                binding.tiao.setText(df.format(tiao)+"G");
+                            }else {
+                                binding.tiao.setText(df.format(tiao)+"M");
+                            }
 
 
-                        if (mianliu >= 1024.00){//流量大于1024m将使用G来表示
-                            mianliu = mianliu / 1024.00;
+                            if (mianliu >= 1024.00){//流量大于1024m将使用G来表示
+                                mianliu = mianliu / 1024.00;
 
-                            binding.mian.setText(df.format(mianliu)+"G");
-                        }else {
-                            binding.mian.setText(df.format(mianliu)+"M");
-                        }
+                                binding.mian.setText(df.format(mianliu)+"G");
+                            }else {
+                                binding.mian.setText(df.format(mianliu)+"M");
+                            }
 
-                        //套餐
-                        if (zong >= 1024.00){//流量大于1024m将使用G来表示
-                            zong = zong / 1024.00;
+                            //套餐
+                            if (zong >= 1024.00){//流量大于1024m将使用G来表示
+                                zong = zong / 1024.00;
 
-                            binding.zong.setText(df.format(zong)+"G");
-                        }else {
-                            binding.zong.setText(df.format(zong)+"M");
-                        }
-
-
-                        if (yong >= 1024.00){//流量大于1024m将使用G来表示
-                            yong = yong / 1024.00;
-
-                            binding.yong.setText(df.format(yong)+"G");
-                        }else {
-                            binding.yong.setText(df.format(yong)+"M");
-                        }
+                                binding.zong.setText(df.format(zong)+"G");
+                            }else {
+                                binding.zong.setText(df.format(zong)+"M");
+                            }
 
 
-                        if (sheng >= 1024.00){//流量大于1024m将使用G来表示
-                            sheng = sheng / 1024.00;
+                            if (yong >= 1024.00){//流量大于1024m将使用G来表示
+                                yong = yong / 1024.00;
 
-                            binding.sheng.setText(df.format(sheng)+"G");
-                        }else {
-                            binding.sheng.setText(df.format(sheng)+"M");
-                        }
-
-                        //定向
-                        if (dingz >= 1024.00){//流量大于1024m将使用G来表示
-                            dingz = dingz / 1024.00;
-
-                            binding.dingz.setText(df.format(dingz)+"G");
-                        }else {
-                            binding.dingz.setText(df.format(dingz)+"M");
-                        }
+                                binding.yong.setText(df.format(yong)+"G");
+                            }else {
+                                binding.yong.setText(df.format(yong)+"M");
+                            }
 
 
-                        if (dingy >= 1024.00){//流量大于1024m将使用G来表示
-                            dingy = dingy / 1024.00;
+                            if (sheng >= 1024.00){//流量大于1024m将使用G来表示
+                                sheng = sheng / 1024.00;
 
-                            binding.dingy.setText(df.format(dingy)+"G");
-                        }else {
-                            binding.dingy.setText(df.format(dingy)+"M");
-                        }
+                                binding.sheng.setText(df.format(sheng)+"G");
+                            }else {
+                                binding.sheng.setText(df.format(sheng)+"M");
+                            }
+
+                            //定向
+                            if (dingz >= 1024.00){//流量大于1024m将使用G来表示
+                                dingz = dingz / 1024.00;
+
+                                binding.dingz.setText(df.format(dingz)+"G");
+                            }else {
+                                binding.dingz.setText(df.format(dingz)+"M");
+                            }
 
 
-                        if (dings >= 1024.00){//流量大于1024m将使用G来表示
-                            dings = dings / 1024.00;
+                            if (dingy >= 1024.00){//流量大于1024m将使用G来表示
+                                dingy = dingy / 1024.00;
 
-                            binding.dings.setText(df.format(dings)+"G");
-                        }else {
-                            binding.dings.setText(df.format(dings)+"M");
-                        }
+                                binding.dingy.setText(df.format(dingy)+"G");
+                            }else {
+                                binding.dingy.setText(df.format(dingy)+"M");
+                            }
 
-                        binding.dayin.setText(dayin);
 
-                        toast("解析成功");
+                            if (dings >= 1024.00){//流量大于1024m将使用G来表示
+                                dings = dings / 1024.00;
+
+                                binding.dings.setText(df.format(dings)+"G");
+                            }else {
+                                binding.dings.setText(df.format(dings)+"M");
+                            }
+
+                            binding.dayin.setText(dayin);
+
+                            toast("解析成功");
+                            binding.stop.setText("刷新");
 
                       /*  if (code.equals("200")){
                             //toast("获取用户信息成功！");
@@ -558,8 +733,8 @@ public class MainActivity extends AppCompatActivity {
                             toast("未知错误");
                         }*/
 
-                    }
-                });
+                        }
+                    });
         }catch (Exception e){
             e.printStackTrace();
         }

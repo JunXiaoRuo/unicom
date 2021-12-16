@@ -1,15 +1,19 @@
-package com.junruo.jiankong;
+package com.junruo.jiankong.server;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
@@ -21,9 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.junruo.jiankong.MainActivity;
+import com.junruo.jiankong.R;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.callback.StringCallback;
 
@@ -34,9 +41,6 @@ import java.util.Date;
 import okhttp3.Call;
 import okhttp3.Response;
 
-/**
- * Created by dongzhong on 2018/5/30.
- */
 
 public class FloatingImageDisplayService extends Service {
     public static boolean isStarted = false;
@@ -86,7 +90,7 @@ public class FloatingImageDisplayService extends Service {
         xgao = share.getString("xgao","152");
         xkuan = share.getString("xkuan","202");
 
-        time = Long.valueOf(share.getString("time",""))*1000;
+        time = Long.valueOf(share.getString("time","180"))*1000;
         System.out.println("==========>高"+gao+"==========>宽"+kuan+"==========>小高"+xgao+"==========>小宽"+xkuan);
 
         isStarted = true;
@@ -137,9 +141,65 @@ public class FloatingImageDisplayService extends Service {
         return null;
     }
 
+    private void startForeground() {
+        startForeground(1, getMyActivityNotification(""));
+    }
+
+
+
+    private Notification getMyActivityNotification(String text){
+
+        String ID = "com.junruo.jiankong";	//这里的id里面输入自己的项目的包的路径
+        String NAME = "前台服务通知栏";
+        Intent intent1 = new Intent(FloatingImageDisplayService.this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent1, 0);
+        NotificationCompat.Builder notification; //创建服务对象
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(ID, NAME, manager.IMPORTANCE_MIN);//静默通知
+            channel.enableLights(true);
+            channel.setShowBadge(true);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            manager.createNotificationChannel(channel);
+            notification = new NotificationCompat.Builder(FloatingImageDisplayService.this).setChannelId(ID);
+        } else {
+            notification = new NotificationCompat.Builder(FloatingImageDisplayService.this);
+        }
+        notification.setContentTitle("联通流量监控")
+                .setContentText(text)//设置内容
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setContentIntent(pendingIntent)
+                .build();
+
+
+        Notification notification1 = notification.build();
+        startForeground(1,notification1);// 开始前台服务
+
+
+        return notification1;
+    }
+
+
+    private void updateNotification(String text) {
+        String text1 = text;
+
+        Notification notification = getMyActivityNotification(text1);
+
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(1, notification);
+    }
+
+
+
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        startForeground();
+
         showFloatingWindow();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -149,7 +209,7 @@ public class FloatingImageDisplayService extends Service {
         windowManager.removeView(displayView);
         handler.removeCallbacksAndMessages(null);
         isStarted = false;
-
+        stopForeground(true);// 停止前台服务--参数：表示是否移除之前的通知
         // Service被终止的同时也停止定时器继续运行
         Toast.makeText(getApplicationContext(), "已关闭悬浮窗", Toast.LENGTH_SHORT).show();
 
@@ -254,12 +314,19 @@ public class FloatingImageDisplayService extends Service {
                         System.out.println("=========================>成功");
                         //binding.packageName.setText(json.get("packageName").toString());
 
+                        JSONObject summary = json.getJSONObject("summary");
+
+
+                        //summary.getString("sum");//本月已用
+                        mianliu = mianliu + Double.parseDouble(summary.getString("freeFlow"));//总免
 
                         JSONArray jsonArray = json.getJSONArray("resources");
+
 
                         JSONObject job = jsonArray.getJSONObject(0);
 
                         JSONArray details = job.getJSONArray("details");
+
 
 
                         for (int i = 0; i < details.size(); i++) {
@@ -279,7 +346,7 @@ public class FloatingImageDisplayService extends Service {
 
                                         String use = liuliang.getString("use");//流量包使用
 
-                                        mianliu = mianliu + Double.parseDouble(use);
+                                        //mianliu = mianliu + Double.parseDouble(use);
 
                                     }
 
@@ -300,7 +367,7 @@ public class FloatingImageDisplayService extends Service {
                                 String use = liuliang.getString("use");//已免流
 
 
-                                mianliu = mianliu + Double.parseDouble(use);
+                                ///mianliu = mianliu + Double.parseDouble(use);
                             }
 
                         }
@@ -318,22 +385,26 @@ public class FloatingImageDisplayService extends Service {
                             editor.commit();
                         }else {
                         }
-
+                        String dayin = "";//打印到通知栏
                         ben = mianliu - onem;//本次免流
                         if (ben >= 1024.00){//流量大于1024m将使用G来表示
                             ben = ben / 1024.00;
                             bentv.setText(df.format(ben)+"G");
+                            dayin = dayin + "免:" + df.format(ben)+"G\t";
                         }else {
                             bentv.setText(df.format(ben)+"M");
+                            dayin = dayin + "免:" + df.format(ben)+"M\t";
+
                         }
 
                         tiao = yong - onet;//本次消耗
                         if (tiao >= 1024.00){//流量大于1024m将使用G来表示
                             tiao = tiao / 1024.00;
-
                             tiaotv.setText(df.format(tiao)+"G");
+                            dayin = dayin + "跳:" + df.format(tiao)+"G";
                         }else {
                             tiaotv.setText(df.format(tiao)+"M");
+                            dayin = dayin + "跳:" + df.format(tiao)+"M";
                         }
 
 
@@ -371,6 +442,8 @@ public class FloatingImageDisplayService extends Service {
                         }else {
                             shengtv.setText(df.format(sheng)+"M");
                         }
+
+                        updateNotification(dayin+"\t更："+sj.format(day));
 
                     }
                 });
