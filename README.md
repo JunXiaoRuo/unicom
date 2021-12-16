@@ -6,5 +6,5 @@
 ### 最新版本下载
 ### https://wwa.lanzoui.com/b016pelqj 密码:h28r
 ## 捐助
-### ![mm_facetoface_collect_qrcode_1639651069141.png](https://jrboy.oss-cn-chengdu.aliyuncs.com/wp-content/uploads/2021/12/16/mm_facetoface_collect_qrcode_1639651069141.png)
-### ![1639651078.jpg](https://jrboy.oss-cn-chengdu.aliyuncs.com/wp-content/uploads/2021/12/16/1639651078.jpg)
+### [![TPkB4O.jpg](https://s4.ax1x.com/2021/12/16/TPkB4O.jpg)](https://imgtu.com/i/TPkB4O)
+### [![TPkT2Q.png](https://s4.ax1x.com/2021/12/16/TPkT2Q.png)](https://imgtu.com/i/TPkT2Q)
