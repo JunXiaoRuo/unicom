@@ -9,6 +9,8 @@ buildscript {
         maven {
             url 'https://dl.bintray.com/spark/maven'
         }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.2'
@@ -28,6 +30,8 @@ allprojects {
         maven {
             url 'https://dl.bintray.com/spark/maven'
         }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+
     }
 }
 

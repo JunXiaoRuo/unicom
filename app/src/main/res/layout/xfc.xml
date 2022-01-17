@@ -6,8 +6,16 @@
     android:orientation="vertical"
     android:background="@drawable/blackground"
     android:gravity="center">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/xfc_center"
+        android:contentDescription="拖动" />
 
     <LinearLayout
+        android:id="@+id/zhe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -171,23 +179,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
-
-            <TextView
-                android:layout_marginTop="5dp"
-                android:id="@+id/zhe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="折叠"
-                android:textSize="9sp"
-                android:textColor="#DCEA8F"/>
-
-
-        </LinearLayout>
 
     </LinearLayout>
 

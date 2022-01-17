@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
 }
 
+
 android {
     compileSdkVersion 30
     buildToolsVersion '30.0.3'
@@ -11,7 +12,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 8
-        versionName '1.9'
+        versionName '2.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -34,6 +35,10 @@ android {
         dataBinding = true
         // for view binding :
          viewBinding = true
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 

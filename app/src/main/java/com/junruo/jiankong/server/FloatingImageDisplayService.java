@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,9 +70,13 @@ public class FloatingImageDisplayService extends Service {
 
     private String cookie = "";//储存cookie信息
 
+    private Boolean isZhan = true;//悬浮窗展开状态
 
 
-    TextView miantv,zongtv,yongtv,shengtv,bentv,tiaotv,sjtv,zhe,miant,zongt,yongt,shengt,sjt;
+
+    TextView miantv,zongtv,yongtv,shengtv,bentv,tiaotv,sjtv,miant,zongt,yongt,shengt,sjt;
+
+    LinearLayout zhe;
 
     private String gao,kuan,xgao,xkuan;
 
@@ -128,9 +133,8 @@ public class FloatingImageDisplayService extends Service {
         sjtv = displayView.findViewById(R.id.sj);
         sjt = displayView.findViewById(R.id.sjt);
 
-
-
         zhe = displayView.findViewById(R.id.zhe);
+
 
 
     }
@@ -243,7 +247,7 @@ public class FloatingImageDisplayService extends Service {
 
 
             zhe.setOnClickListener(v -> {
-                if (zhe.getText().toString().equals("折叠")){
+                if (isZhan){
                     layoutParams.width = Integer.parseInt(xkuan);//200
                     layoutParams.height = Integer.parseInt(xgao);//150
 
@@ -257,11 +261,11 @@ public class FloatingImageDisplayService extends Service {
                     zongt.setVisibility(8);
                     yongt.setVisibility(8);
                     shengt.setVisibility(8);
-                    zhe.setText("展开");
+                    isZhan = false;
 
                     windowManager.updateViewLayout(displayView, layoutParams);
 
-                }else if (zhe.getText().toString().equals("展开")){
+                }else if (!isZhan){
                     layoutParams.width = Integer.parseInt(kuan);//230
                     layoutParams.height = Integer.parseInt(gao);//320
                     sjt.setText("时间：");
@@ -273,7 +277,7 @@ public class FloatingImageDisplayService extends Service {
                     zongt.setVisibility(0);
                     yongt.setVisibility(0);
                     shengt.setVisibility(0);
-                    zhe.setText("折叠");
+                    isZhan = true;
 
                     windowManager.updateViewLayout(displayView, layoutParams);
                 }
@@ -300,41 +304,57 @@ public class FloatingImageDisplayService extends Service {
 
         try {
 
-        OkHttpUtils.post("https://m.client.10010.com/mobileservicequery/operationservice/queryOcsPackageFlowLeftContent")
-                .headers("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
-                .headers("Cookie", cookie)
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        if (s.equals("999999")||s.equals("")||s == null){
-                            Toast.makeText(FloatingImageDisplayService.this,"解析cookie失败，请重新获取。",Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        JSONObject json = JSONObject.parseObject(s);
-                        System.out.println("=========================>成功");
-                        //binding.packageName.setText(json.get("packageName").toString());
+            OkHttpUtils.post("https://m.client.10010.com/mobileservicequery/operationservice/queryOcsPackageFlowLeftContent")
+                    .headers("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
+                    .headers("Cookie", cookie)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            if (s.equals("999999")||s.equals("")||s == null){
+                                Toast.makeText(FloatingImageDisplayService.this,"解析cookie失败，请重新获取。",Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            JSONObject json = JSONObject.parseObject(s);
+                            System.out.println("=========================>成功");
+                            //binding.packageName.setText(json.get("packageName").toString());
 
-                        JSONObject summary = json.getJSONObject("summary");
-
-
-                        //summary.getString("sum");//本月已用
-                        mianliu = mianliu + Double.parseDouble(summary.getString("freeFlow"));//总免
-
-                        JSONArray jsonArray = json.getJSONArray("resources");
+                            JSONObject summary = json.getJSONObject("summary");
 
 
-                        JSONObject job = jsonArray.getJSONObject(0);
+                            //summary.getString("sum");//本月已用
+                            mianliu = mianliu + Double.parseDouble(summary.getString("freeFlow"));//总免
 
-                        JSONArray details = job.getJSONArray("details");
+                            JSONArray jsonArray = json.getJSONArray("resources");
+
+
+                            JSONObject job = jsonArray.getJSONObject(0);
+
+                            JSONArray details = job.getJSONArray("details");
 
 
 
-                        for (int i = 0; i < details.size(); i++) {
-                            JSONObject liuliang = details.getJSONObject(i);
-                            if (liuliang.getString("limited").equals("0")) {//套内流量包
-                                if (liuliang.getString("addupItemCode") != null){
+                            for (int i = 0; i < details.size(); i++) {
+                                JSONObject liuliang = details.getJSONObject(i);
+                                if (liuliang.getString("limited").equals("0")) {//套内流量包
+                                    if (liuliang.getString("addupItemCode") != null){
 
-                                    if (!liuliang.getString("addupItemCode").equals("40008")){//通用流量包
+                                        if (!liuliang.getString("addupItemCode").equals("40008")){//通用流量包
+                                            String total = liuliang.getString("total");//流量包总量
+                                            String use = liuliang.getString("use");//流量包使用
+                                            String remain = liuliang.getString("remain");//流量包剩余
+
+                                            zong = zong + Double.parseDouble(total);
+                                            yong = yong + Double.parseDouble(use);
+                                            sheng = sheng + Double.parseDouble(remain);
+                                        }else {//定向流量包
+
+                                            String use = liuliang.getString("use");//流量包使用
+
+                                            //mianliu = mianliu + Double.parseDouble(use);
+
+                                        }
+
+                                    }else {
                                         String total = liuliang.getString("total");//流量包总量
                                         String use = liuliang.getString("use");//流量包使用
                                         String remain = liuliang.getString("remain");//流量包剩余
@@ -342,111 +362,95 @@ public class FloatingImageDisplayService extends Service {
                                         zong = zong + Double.parseDouble(total);
                                         yong = yong + Double.parseDouble(use);
                                         sheng = sheng + Double.parseDouble(remain);
-                                    }else {//定向流量包
-
-                                        String use = liuliang.getString("use");//流量包使用
-
-                                        //mianliu = mianliu + Double.parseDouble(use);
-
                                     }
 
-                            }else {
-                                    String total = liuliang.getString("total");//流量包总量
-                                    String use = liuliang.getString("use");//流量包使用
-                                    String remain = liuliang.getString("remain");//流量包剩余
 
-                                    zong = zong + Double.parseDouble(total);
-                                    yong = yong + Double.parseDouble(use);
-                                    sheng = sheng + Double.parseDouble(remain);
+                                    // dayin = dayin + "\n流量包名称：" + feePolicyName + "总量：" + total + "M，已使用：" + use + "M，剩余" + remain + "M\n";
+                                }else if (liuliang.getString("addUpItemName")==null||liuliang.getString("addupItemCode").equals("40008")){
+                                    String feePolicyName = liuliang.getString("feePolicyName");//免流包名称
+                                    String use = liuliang.getString("use");//已免流
+
+
+                                    ///mianliu = mianliu + Double.parseDouble(use);
                                 }
 
-
-                               // dayin = dayin + "\n流量包名称：" + feePolicyName + "总量：" + total + "M，已使用：" + use + "M，剩余" + remain + "M\n";
-                            }else if (liuliang.getString("addUpItemName")==null||liuliang.getString("addupItemCode").equals("40008")){
-                                String feePolicyName = liuliang.getString("feePolicyName");//免流包名称
-                                String use = liuliang.getString("use");//已免流
-
-
-                                ///mianliu = mianliu + Double.parseDouble(use);
                             }
 
+                            if (orone.equals("yes")){
+                                onet = yong;
+                                onem = mianliu;
+                                orone="no";
+                                // 创建SharedPreferences对象用于存储Cookie信息,并将其私有化
+                                SharedPreferences share = getSharedPreferences("Cookie",
+                                        Context.MODE_PRIVATE);
+                                // 获取编辑器来存储数据到sharedpreferences中
+                                SharedPreferences.Editor editor = share.edit();
+                                editor.putString("Cookie",cookie);
+                                editor.commit();
+                            }else {
+                            }
+                            String dayin = "";//打印到通知栏
+                            ben = mianliu - onem;//本次免流
+                            if (ben >= 1024.00){//流量大于1024m将使用G来表示
+                                ben = ben / 1024.00;
+                                bentv.setText(df.format(ben)+"G");
+                                dayin = dayin + "免:" + df.format(ben)+"G\t";
+                            }else {
+                                bentv.setText(df.format(ben)+"M");
+                                dayin = dayin + "免:" + df.format(ben)+"M\t";
+
+                            }
+
+                            tiao = yong - onet;//本次消耗
+                            if (tiao >= 1024.00){//流量大于1024m将使用G来表示
+                                tiao = tiao / 1024.00;
+                                tiaotv.setText(df.format(tiao)+"G");
+                                dayin = dayin + "跳:" + df.format(tiao)+"G";
+                            }else {
+                                tiaotv.setText(df.format(tiao)+"M");
+                                dayin = dayin + "跳:" + df.format(tiao)+"M";
+                            }
+
+
+                            if (mianliu >= 1024.00){//流量大于1024m将使用G来表示
+                                mianliu = mianliu / 1024.00;
+
+                                miantv.setText(df.format(mianliu)+"G");
+                            }else {
+                                miantv.setText(df.format(mianliu)+"M");
+                            }
+
+
+                            if (zong >= 1024.00){//流量大于1024m将使用G来表示
+                                zong = zong / 1024.00;
+
+                                zongtv.setText(df.format(zong)+"G");
+                            }else {
+                                zongtv.setText(df.format(zong)+"M");
+                            }
+
+
+                            if (yong >= 1024.00){//流量大于1024m将使用G来表示
+                                yong = yong / 1024.00;
+
+                                yongtv.setText(df.format(yong)+"G");
+                            }else {
+                                yongtv.setText(df.format(yong)+"M");
+                            }
+
+
+                            if (sheng >= 1024.00){//流量大于1024m将使用G来表示
+                                sheng = sheng / 1024.00;
+
+                                shengtv.setText(df.format(sheng)+"G");
+                            }else {
+                                shengtv.setText(df.format(sheng)+"M");
+                            }
+
+                            updateNotification(dayin+"\t更："+sj.format(day));
+
                         }
-
-                        if (orone.equals("yes")){
-                            onet = yong;
-                            onem = mianliu;
-                            orone="no";
-                            // 创建SharedPreferences对象用于存储Cookie信息,并将其私有化
-                            SharedPreferences share = getSharedPreferences("Cookie",
-                                    Context.MODE_PRIVATE);
-                            // 获取编辑器来存储数据到sharedpreferences中
-                            SharedPreferences.Editor editor = share.edit();
-                            editor.putString("Cookie",cookie);
-                            editor.commit();
-                        }else {
-                        }
-                        String dayin = "";//打印到通知栏
-                        ben = mianliu - onem;//本次免流
-                        if (ben >= 1024.00){//流量大于1024m将使用G来表示
-                            ben = ben / 1024.00;
-                            bentv.setText(df.format(ben)+"G");
-                            dayin = dayin + "免:" + df.format(ben)+"G\t";
-                        }else {
-                            bentv.setText(df.format(ben)+"M");
-                            dayin = dayin + "免:" + df.format(ben)+"M\t";
-
-                        }
-
-                        tiao = yong - onet;//本次消耗
-                        if (tiao >= 1024.00){//流量大于1024m将使用G来表示
-                            tiao = tiao / 1024.00;
-                            tiaotv.setText(df.format(tiao)+"G");
-                            dayin = dayin + "跳:" + df.format(tiao)+"G";
-                        }else {
-                            tiaotv.setText(df.format(tiao)+"M");
-                            dayin = dayin + "跳:" + df.format(tiao)+"M";
-                        }
-
-
-                        if (mianliu >= 1024.00){//流量大于1024m将使用G来表示
-                            mianliu = mianliu / 1024.00;
-
-                            miantv.setText(df.format(mianliu)+"G");
-                        }else {
-                            miantv.setText(df.format(mianliu)+"M");
-                        }
-
-
-                        if (zong >= 1024.00){//流量大于1024m将使用G来表示
-                            zong = zong / 1024.00;
-
-                            zongtv.setText(df.format(zong)+"G");
-                        }else {
-                            zongtv.setText(df.format(zong)+"M");
-                        }
-
-
-                        if (yong >= 1024.00){//流量大于1024m将使用G来表示
-                            yong = yong / 1024.00;
-
-                            yongtv.setText(df.format(yong)+"G");
-                        }else {
-                            yongtv.setText(df.format(yong)+"M");
-                        }
-
-
-                        if (sheng >= 1024.00){//流量大于1024m将使用G来表示
-                            sheng = sheng / 1024.00;
-
-                            shengtv.setText(df.format(sheng)+"G");
-                        }else {
-                            shengtv.setText(df.format(sheng)+"M");
-                        }
-
-                        updateNotification(dayin+"\t更："+sj.format(day));
-
-                    }
-                });
+                    });
 
         }catch (Exception e){
             e.printStackTrace();
